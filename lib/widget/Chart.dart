@@ -21,7 +21,7 @@ class Chart extends StatelessWidget {
         }
         toReturn[DateFormat('EEEE').format(date)] = totalAmount;
         return toReturn;
-      });
+      }).reversed.toList();
 
   double get _totalAmount => _purchases.fold(
       0, (previousValue, element) => element.price + previousValue);
@@ -42,7 +42,7 @@ class Chart extends StatelessWidget {
                 return Flexible(
                     fit: FlexFit.tight,
                     child: ChartBar(dayOfWeek.substring(0, 3), amount,
-                        amount / _totalAmount));
+                        _totalAmount == 0 ? 0 : amount / _totalAmount));
               })
             ],
           ),

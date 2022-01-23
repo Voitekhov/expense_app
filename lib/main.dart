@@ -5,7 +5,7 @@ import 'package:expence_app/widget/Chart.dart';
 import 'package:flutter/material.dart';
 
 final List<Purchase> _purchases = [
-  Purchase(id: 1, title: "Milk", price: 333.2, dateTime: DateTime.now())
+  Purchase(id: 1, title: "Milk", price: 1333.2, dateTime: DateTime.now())
 ];
 
 List<Purchase> get _purchasesForWeek {
@@ -54,9 +54,10 @@ class _MyAppState extends State<MyApp> {
             ),
           ],
         ),
-        body: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [Chart(_purchasesForWeek), PurchaseList(_purchases)]),
+        body: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+          Chart(_purchasesForWeek),
+          PurchaseList(_purchases, _deletePurchase)
+        ]),
         floatingActionButton: FloatingActionButton(
           child: Icon(Icons.add),
           onPressed: () => _startAddNewTransaction(context),
@@ -70,6 +71,13 @@ class _MyAppState extends State<MyApp> {
           Purchase(id: 1, title: txTitle, price: txPrice, dateTime: dateTime));
     });
     Navigator.pop(context);
+  }
+
+  _deletePurchase(int id) {
+    setState(() {
+      _purchases.removeWhere((p) => p.id == id);
+    });
+
   }
 
   void _startAddNewTransaction(BuildContext ctx) {

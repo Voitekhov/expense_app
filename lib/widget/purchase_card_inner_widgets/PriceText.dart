@@ -12,8 +12,8 @@ class PriceText extends StatelessWidget {
     return Container(
       margin: EdgeInsets.all(10),
       alignment: Alignment.center,
-      width: 70,
-      height: 70,
+      width: 77,
+      height: 77,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         color: Colors.deepPurple,
@@ -22,16 +22,16 @@ class PriceText extends StatelessWidget {
           width: 2,
         ),
       ),
-      child: FittedBox(
-        child: Text(
-          _price.toStringAsFixed(1),
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: _fontSize,
-            color: Colors.white,
+        child: FittedBox(
+          child: Text(
+            _price.toStringAsFixed(1),
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: _fontSize,
+              color: Colors.white,
+            ),
           ),
         ),
-      ),
     );
   }
 }

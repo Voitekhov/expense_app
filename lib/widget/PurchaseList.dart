@@ -1,12 +1,12 @@
 import 'package:expence_app/model/Purchase.dart';
 import 'package:expence_app/widget/PurchaseCard.dart';
-import 'package:expence_app/widget/UserInput.dart';
 import 'package:flutter/material.dart';
 
 class PurchaseList extends StatefulWidget {
   List<Purchase> _purchases;
+  Function _delete;
 
-  PurchaseList(this._purchases);
+  PurchaseList(this._purchases, this._delete);
 
   @override
   _PurchaseListState createState() {
@@ -42,7 +42,8 @@ class _PurchaseListState extends State<PurchaseList> {
                     child: ListView.builder(
                       itemCount: widget._purchases.length,
                       itemBuilder: (ctx, index) {
-                        return PurchaseCard(widget._purchases[index]);
+                        return PurchaseCard(
+                            widget._purchases[index], widget._delete);
                       },
                     )),
               ]);
