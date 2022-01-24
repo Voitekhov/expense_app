@@ -22,16 +22,17 @@ class PriceText extends StatelessWidget {
           width: 2,
         ),
       ),
-        child: FittedBox(
-          child: Text(
-            _price.toStringAsFixed(1),
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: _fontSize,
-              color: Colors.white,
-            ),
+      child: FittedBox(
+        child: Text(
+          _price.toStringAsFixed(1),
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            // user can customize textScaleFactor in his phone
+            fontSize: _fontSize * MediaQuery.of(context).textScaleFactor,
+            color: Colors.white,
           ),
         ),
+      ),
     );
   }
 }

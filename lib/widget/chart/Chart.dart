@@ -1,5 +1,5 @@
 import 'package:expence_app/model/Purchase.dart';
-import 'package:expence_app/widget/CharBar.dart';
+import 'package:expence_app/widget/chart/CharBar.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 

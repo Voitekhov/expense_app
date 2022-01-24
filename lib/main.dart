@@ -1,14 +1,17 @@
 import 'package:expence_app/model/Purchase.dart';
 import 'package:expence_app/widget/PurchaseList.dart';
 import 'package:expence_app/widget/UserInput.dart';
-import 'package:expence_app/widget/Chart.dart';
+import 'package:expence_app/widget/chart/Chart.dart';
 import 'package:flutter/material.dart';
 
 int sq_id = 1;
 
 final List<Purchase> _purchases = [
-  Purchase(id: sq_id, title: "Milk", price: 1333.2, dateTime: DateTime.now())
+  Purchase(id: sq_id, title: "Milk", price: 1333.2, dateTime: DateTime.now()),
+  Purchase(id: ++sq_id, title: "Bread", price: 2.3, dateTime: DateTime.now())
 ];
+
+bool isChartVisible = false;
 
 List<Purchase> get _purchasesForWeek {
   return _purchases
@@ -46,20 +49,55 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text("Second App"),
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons.add),
-              onPressed: () => _startAddNewTransaction(context),
-            ),
-          ],
+    AppBar appBar = AppBar(
+      title: Text("Second App"),
+      actions: <Widget>[
+        IconButton(
+          icon: Icon(Icons.add),
+          onPressed: () => _startAddNewTransaction(context),
         ),
-        body: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-          Chart(_purchasesForWeek),
-          PurchaseList(_purchases, _deletePurchase)
-        ]),
+      ],
+    );
+
+    final double workingScreenHeight = MediaQuery.of(context).size.height -
+        appBar.preferredSize.height -
+        MediaQuery.of(context).padding.top -
+        MediaQuery.of(context).padding.bottom;
+
+    final bool isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
+
+    double percentageOfHeightForChart = isLandscape ? 0.8 : 0.2;
+    double percentageOfHeightForPurchaseList = isLandscape ? 0.85 : 0.8;
+
+    Widget chart = Container(
+        height: workingScreenHeight * percentageOfHeightForChart,
+        child: Chart(_purchasesForWeek));
+
+    Widget purchaseList = Container(
+        height: workingScreenHeight * percentageOfHeightForPurchaseList,
+        child: PurchaseList(_purchases, _deletePurchase));
+
+    return Scaffold(
+        appBar: appBar,
+        body: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: isLandscape
+                ? [
+                    Container(
+                      height: workingScreenHeight * 0.1,
+                      child: Switch(
+                        value: isChartVisible,
+                        onChanged: (bool value) {
+                          setState(() {
+                            isChartVisible = value;
+                          });
+                        },
+                      ),
+                    ),
+                    isChartVisible ? chart : purchaseList
+                  ]
+                : [chart, purchaseList]),
         floatingActionButton: FloatingActionButton(
           child: Icon(Icons.add),
           onPressed: () => _startAddNewTransaction(context),

@@ -17,35 +17,32 @@ class PurchaseList extends StatefulWidget {
 class _PurchaseListState extends State<PurchaseList> {
   @override
   Widget build(BuildContext context) {
-    return Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: widget._purchases.isEmpty
-            ? [
-                Column(
-                  children: [
-                    Text("No purchases yet"),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Container(
-                        height: 300,
-                        child: Image(
-                          image: AssetImage('assets/image/waiting.png'),
-                          fit: BoxFit.cover,
-                        )),
-                  ],
-                ),
-              ]
-            : [
+    return widget._purchases.isEmpty
+        ? LayoutBuilder(builder: ((ctx, cons) {
+            return Container(
+                child: Column(
+              children: [
                 Container(
-                    height: 300,
-                    child: ListView.builder(
-                      itemCount: widget._purchases.length,
-                      itemBuilder: (ctx, index) {
-                        return PurchaseCard(
-                            widget._purchases[index], widget._delete);
-                      },
+                    height: cons.maxHeight * 0.07,
+                    child: Text("No purchases yet")),
+                SizedBox(
+                  height: cons.maxHeight * 0.03,
+                ),
+                Container(
+                    height: cons.maxHeight * 0.9,
+                    child: Image(
+                      image: AssetImage('assets/image/waiting.png'),
+                      fit: BoxFit.cover,
                     )),
-              ]);
+              ],
+            ));
+          }))
+        : ListView.builder(
+            itemCount: widget._purchases.length,
+            shrinkWrap: true,
+            itemBuilder: (ctx, index) {
+              return PurchaseCard(widget._purchases[index], widget._delete);
+            },
+          );
   }
 }
