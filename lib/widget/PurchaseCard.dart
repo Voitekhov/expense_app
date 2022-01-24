@@ -3,7 +3,6 @@ import 'package:expence_app/widget/purchase_card_inner_widgets/DateTimeText.dart
 import 'package:expence_app/widget/purchase_card_inner_widgets/PriceText.dart';
 import 'package:expence_app/widget/purchase_card_inner_widgets/TitleText.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 class PurchaseCard extends StatefulWidget {
   final Purchase _purchase;

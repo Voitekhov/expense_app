@@ -4,8 +4,10 @@ import 'package:expence_app/widget/UserInput.dart';
 import 'package:expence_app/widget/Chart.dart';
 import 'package:flutter/material.dart';
 
+int sq_id = 1;
+
 final List<Purchase> _purchases = [
-  Purchase(id: 1, title: "Milk", price: 1333.2, dateTime: DateTime.now())
+  Purchase(id: sq_id, title: "Milk", price: 1333.2, dateTime: DateTime.now())
 ];
 
 List<Purchase> get _purchasesForWeek {
@@ -65,10 +67,9 @@ class _MyAppState extends State<MyApp> {
   }
 
   _addPurchase(String txTitle, double txPrice, DateTime dateTime) {
-    dateTime = DateTime.now();
     setState(() {
-      _purchases.add(
-          Purchase(id: 1, title: txTitle, price: txPrice, dateTime: dateTime));
+      _purchases.add(Purchase(
+          id: ++sq_id, title: txTitle, price: txPrice, dateTime: dateTime));
     });
     Navigator.pop(context);
   }
@@ -77,7 +78,6 @@ class _MyAppState extends State<MyApp> {
     setState(() {
       _purchases.removeWhere((p) => p.id == id);
     });
-
   }
 
   void _startAddNewTransaction(BuildContext ctx) {

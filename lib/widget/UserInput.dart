@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class UserInput extends StatefulWidget {
   Function addPurchase;
@@ -10,22 +11,23 @@ class UserInput extends StatefulWidget {
 }
 
 class _UserInputState extends State<UserInput> {
-  final titleController = TextEditingController();
+  final _titleController = TextEditingController();
 
-  final amountController = TextEditingController();
+  final _amountController = TextEditingController();
+
+  DateTime? _selectedDate = null;
 
   @override
   Widget build(BuildContext context) {
     return Card(
       elevation: 5,
       child: Container(
-        padding: EdgeInsets.all(10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: <Widget>[
             TextField(
               decoration: InputDecoration(labelText: 'Title'),
-              controller: titleController,
+              controller: _titleController,
               onSubmitted: (_) => _addToList(),
               // onChanged: (val) {
               //   titleInput = val;
@@ -33,11 +35,20 @@ class _UserInputState extends State<UserInput> {
             ),
             TextField(
               decoration: InputDecoration(labelText: 'Amount'),
-              controller: amountController,
+              controller: _amountController,
               keyboardType: TextInputType.numberWithOptions(decimal: true),
               onSubmitted: (_) => _addToList(),
               // onChanged: (val) => amountInput = val,
             ),
+            Container(
+              margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
+              alignment: Alignment.topLeft,
+              child: Text(_selectedDate == null
+                  ? "Date no chosen"
+                  : DateFormat().add_yMd().format(_selectedDate!)),
+            ),
+            TextButton(onPressed: _showDatePicker, child: Text("Choose date")),
+            // place for date time picker
             FlatButton(
               child: Text('Add Transaction'),
               textColor: Colors.purple,
@@ -50,13 +61,27 @@ class _UserInputState extends State<UserInput> {
   }
 
   _addToList() {
-    if (titleController.text.isEmpty || amountController.text.isEmpty) {
+    if (_titleController.text.isEmpty || _amountController.text.isEmpty) {
       return;
     }
-    double amount = double.parse(amountController.text);
+    double amount = double.parse(_amountController.text);
     if (amount < 0) {
       return;
     }
-    widget.addPurchase(titleController.text, amount, DateTime.now());
+    widget.addPurchase(_titleController.text, amount,
+        _selectedDate == null ? DateTime.now() : _selectedDate);
+  }
+
+  _showDatePicker() {
+    showDatePicker(
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2020, 1, 1),
+      lastDate: DateTime.now().add(Duration(days: 30)),
+      context: context,
+    ).then((value) {
+      setState(() {
+        _selectedDate = value;
+      });
+    });
   }
 }
