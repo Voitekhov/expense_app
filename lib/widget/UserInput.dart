@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import 'adaptive/AdaptiveElevatedButton.dart';
+
 class UserInput extends StatefulWidget {
   Function addPurchase;
 
@@ -21,40 +23,41 @@ class _UserInputState extends State<UserInput> {
   Widget build(BuildContext context) {
     return Card(
       elevation: 5,
-      child: Container(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: <Widget>[
-            TextField(
-              decoration: InputDecoration(labelText: 'Title'),
-              controller: _titleController,
-              onSubmitted: (_) => _addToList(),
-              // onChanged: (val) {
-              //   titleInput = val;
-              // },
-            ),
-            TextField(
-              decoration: InputDecoration(labelText: 'Amount'),
-              controller: _amountController,
-              keyboardType: TextInputType.numberWithOptions(decimal: true),
-              onSubmitted: (_) => _addToList(),
-              // onChanged: (val) => amountInput = val,
-            ),
-            Container(
-              margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
-              alignment: Alignment.topLeft,
-              child: Text(_selectedDate == null
-                  ? "Date no chosen"
-                  : DateFormat().add_yMd().format(_selectedDate!)),
-            ),
-            TextButton(onPressed: _showDatePicker, child: Text("Choose date")),
-            // place for date time picker
-            FlatButton(
-              child: Text('Add Transaction'),
-              textColor: Colors.purple,
-              onPressed: () => _addToList(),
-            ),
-          ],
+      child: SingleChildScrollView(
+        child: Container(
+          padding: EdgeInsets.fromLTRB(
+              10, 10, 10, MediaQuery.of(context).viewInsets.bottom),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: <Widget>[
+              TextField(
+                decoration: InputDecoration(labelText: 'Title'),
+                controller: _titleController,
+                onSubmitted: (_) => _addToList(),
+                // onChanged: (val) {
+                //   titleInput = val;
+                // },
+              ),
+              TextField(
+                decoration: InputDecoration(labelText: 'Amount'),
+                controller: _amountController,
+                keyboardType: TextInputType.numberWithOptions(decimal: true),
+                onSubmitted: (_) => _addToList(),
+                // onChanged: (val) => amountInput = val,
+              ),
+              Container(
+                margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                alignment: Alignment.topLeft,
+                child: Text(_selectedDate == null
+                    ? "Date no chosen"
+                    : DateFormat().add_yMd().format(_selectedDate!)),
+              ),
+              TextButton(
+                  onPressed: _showDatePicker, child: Text("Choose date")),
+              // place for date time picker
+              AdaptiveElevatedButton.of("add to list", _addToList),
+            ],
+          ),
         ),
       ),
     );

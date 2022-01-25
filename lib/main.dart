@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:expence_app/model/Purchase.dart';
 import 'package:expence_app/widget/PurchaseList.dart';
 import 'package:expence_app/widget/UserInput.dart';
 import 'package:expence_app/widget/chart/Chart.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 int sq_id = 1;
@@ -49,7 +52,20 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    AppBar appBar = AppBar(
+    ObstructingPreferredSizeWidget cupertinoAppBar = CupertinoNavigationBar(
+      middle: Text('Personal Expenses'),
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          GestureDetector(
+            child: Icon(CupertinoIcons.add),
+            onTap: () => _startAddNewTransaction(context),
+          )
+        ],
+      ),
+    );
+
+    PreferredSizeWidget androidAppBar = AppBar(
       title: Text("Second App"),
       actions: <Widget>[
         IconButton(
@@ -60,7 +76,9 @@ class _MyAppState extends State<MyApp> {
     );
 
     final double workingScreenHeight = MediaQuery.of(context).size.height -
-        appBar.preferredSize.height -
+        (Platform.isAndroid
+            ? androidAppBar.preferredSize.height
+            : cupertinoAppBar.preferredSize.height) -
         MediaQuery.of(context).padding.top -
         MediaQuery.of(context).padding.bottom;
 
@@ -78,15 +96,15 @@ class _MyAppState extends State<MyApp> {
         height: workingScreenHeight * percentageOfHeightForPurchaseList,
         child: PurchaseList(_purchases, _deletePurchase));
 
-    return Scaffold(
-        appBar: appBar,
+    Widget scaffold = Scaffold(
+        appBar: androidAppBar,
         body: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: isLandscape
                 ? [
                     Container(
                       height: workingScreenHeight * 0.1,
-                      child: Switch(
+                      child: Switch.adaptive(
                         value: isChartVisible,
                         onChanged: (bool value) {
                           setState(() {
@@ -98,10 +116,40 @@ class _MyAppState extends State<MyApp> {
                     isChartVisible ? chart : purchaseList
                   ]
                 : [chart, purchaseList]),
-        floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.add),
-          onPressed: () => _startAddNewTransaction(context),
+        floatingActionButton: Container(
+          margin: EdgeInsets.fromLTRB(20, 0, 0, 0),
+          alignment: Alignment.bottomLeft,
+          child: FloatingActionButton(
+            child: Icon(Icons.add),
+            onPressed: () => _startAddNewTransaction(context),
+          ),
         ));
+
+    Widget cupertionScaffold = CupertinoPageScaffold(
+      navigationBar: cupertinoAppBar,
+      child: SafeArea(
+        child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: isLandscape
+                ? [
+                    Container(
+                      height: workingScreenHeight * 0.1,
+                      child: Switch.adaptive(
+                        value: isChartVisible,
+                        onChanged: (bool value) {
+                          setState(() {
+                            isChartVisible = value;
+                          });
+                        },
+                      ),
+                    ),
+                    isChartVisible ? chart : purchaseList
+                  ]
+                : [chart, purchaseList]),
+      ),
+    );
+
+    return Platform.isIOS ? cupertionScaffold : scaffold;
   }
 
   _addPurchase(String txTitle, double txPrice, DateTime dateTime) {
